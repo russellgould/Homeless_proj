@@ -1,8 +1,9 @@
 #!/bin/bash
 
 
-
+echo 'Setting up logfile'
 LOGFILE=/home/vagrant/provision_script.log
+echo > $LOGFILE
 
 
 
@@ -30,10 +31,6 @@ echo 'Installing pip...'
 apt-get install -y python-pip >> $LOGFILE
 echo 'Installing dos2unix...'
 apt-get install -y dos2unix >> $LOGFILE
-echo 'Installing postgis...'
-apt-get install -y postgis >> $LOGFILE
-echo 'Installing unzip...'
-apt-get install -y unzip >> $LOGFILE
 
 echo 'Cleaning up APT...'
 apt-get autoremove - >> $LOGFILE
@@ -58,12 +55,8 @@ su postgres -c 'psql -c "CREATE DATABASE vagrant;"' >> $LOGFILE
 echo 'Loading data into PostgreSQL...'
 su vagrant -c 'psql < proj/buildCrimeDataRaw.sql' >> $LOGFILE
 
-
-
-# install MiniConda
-echo 'Installing MiniConda...'
-#TODO figure out how to do this
-
+echo 'Running scripts as user vagrant...'
+su vagrant -c 'bash ~vagrant/proj/provision_script_vagrant.sh' >> $LOGFILE
 
 
 # change log file owner to vagrant
